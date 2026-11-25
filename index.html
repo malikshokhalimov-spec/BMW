@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMW — Haydash zavqi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #1c69d4;
+      --blue-dark: #0f4fa8;
+      --ink: #0b0d10;
+      --ink-2: #14171c;
+      --ink-3: #1d2128;
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #f4f6f8;
+      --muted: #9aa3ad;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--ink);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img, svg { max-width: 100%; display: block; }
+
+    .container { width: min(1200px, 100% - 40px); margin-inline: auto; }
+
+    /* ---------- Header ---------- */
+    .header {
+      position: fixed; inset: 0 0 auto 0; z-index: 50;
+      transition: background .3s, border-color .3s;
+      border-bottom: 1px solid transparent;
+    }
+    .header.scrolled {
+      background: rgba(11, 13, 16, 0.85);
+      backdrop-filter: blur(14px);
+      border-color: var(--line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: .08em; font-size: 1.15rem; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 2px solid #fff;
+      display: grid; place-items: center;
+      font-size: .62rem; font-weight: 800; letter-spacing: .05em;
+    }
+    .nav-links { display: flex; gap: 34px; list-style: none; font-size: .93rem; color: #d4d9de; }
+    .nav-links a { position: relative; padding: 6px 0; transition: color .2s; }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 2px;
+      background: var(--blue); transition: width .25s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta { display: flex; align-items: center; gap: 14px; }
+    .menu-btn { display: none; background: none; border: 0; color: #fff; cursor: pointer; }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px 28px; border-radius: 999px; font-weight: 600; font-size: .95rem;
+      border: 1px solid transparent; cursor: pointer; transition: all .25s; font-family: inherit;
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(28,105,212,.35); }
+    .btn-ghost { border-color: rgba(255,255,255,.3); color: #fff; }
+    .btn-ghost:hover { background: #fff; color: var(--ink); }
+    .btn-sm { padding: 10px 20px; font-size: .85rem; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative; min-height: 100vh; display: flex; align-items: center;
+      overflow: hidden; padding-top: 76px;
+      background:
+        radial-gradient(1200px 600px at 75% 70%, rgba(28,105,212,.28), transparent 60%),
+        radial-gradient(800px 400px at 10% 10%, rgba(255,255,255,.05), transparent 60%),
+        linear-gradient(180deg, #07090c 0%, #0b0d10 100%);
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+      opacity: .5;
+    }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; color: var(--blue);
+      font-weight: 600; margin-bottom: 22px;
+    }
+    .eyebrow::before { content: ""; width: 34px; height: 2px; background: var(--blue); }
+    .hero h1 { font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1.02; font-weight: 800; letter-spacing: -.03em; }
+    .hero h1 span {
+      background: linear-gradient(90deg, #fff, #7fb0ff);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 480px; margin: 24px 0 38px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .hero-car { position: relative; animation: float 6s ease-in-out infinite; }
+    .hero-car::after {
+      content: ""; position: absolute; left: 10%; right: 10%; bottom: 4%; height: 30px;
+      background: radial-gradient(ellipse, rgba(0,0,0,.8), transparent 70%); filter: blur(6px); z-index: -1;
+    }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .hero-specs {
+      position: relative; display: flex; gap: 48px; margin-top: 60px; padding-top: 30px;
+      border-top: 1px solid var(--line); flex-wrap: wrap;
+    }
+    .hero-specs strong { display: block; font-size: 1.6rem; font-weight: 700; }
+    .hero-specs span { color: var(--muted); font-size: .85rem; }
+
+    .scroll-hint {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      width: 26px; height: 42px; border: 2px solid rgba(255,255,255,.35); border-radius: 20px;
+    }
+    .scroll-hint::after {
+      content: ""; position: absolute; top: 8px; left: 50%; width: 4px; height: 8px; margin-left: -2px;
+      background: #fff; border-radius: 2px; animation: scroll 1.8s infinite;
+    }
+    @keyframes scroll { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(14px); } }
+
+    /* ---------- Sections ---------- */
+    section { padding: 120px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 56px; flex-wrap: wrap; }
+    .section-head h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; max-width: 620px; }
+    .section-head p { color: var(--muted); max-width: 420px; }
+
+    /* ---------- Models ---------- */
+    .tabs { display: flex; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; }
+    .tab {
+      padding: 10px 22px; border-radius: 999px; border: 1px solid var(--line);
+      background: transparent; color: var(--muted); font-family: inherit; font-weight: 500; cursor: pointer; transition: all .2s;
+    }
+    .tab:hover { color: #fff; border-color: rgba(255,255,255,.25); }
+    .tab.active { background: #fff; color: var(--ink); border-color: #fff; }
+
+    .models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .model {
+      position: relative; background: var(--ink-2); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 28px; overflow: hidden; transition: transform .35s, border-color .35s;
+    }
+    .model:hover { transform: translateY(-6px); border-color: rgba(28,105,212,.55); }
+    .model.hidden { display: none; }
+    .model-tag {
+      display: inline-block; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px; background: rgba(28,105,212,.15); color: #7fb0ff; font-weight: 600;
+    }
+    .model-visual {
+      height: 170px; margin: 18px -10px; display: grid; place-items: center;
+      background: radial-gradient(ellipse at 50% 80%, rgba(28,105,212,.18), transparent 65%);
+    }
+    .model-visual svg { width: 100%; transition: transform .5s; }
+    .model:hover .model-visual svg { transform: scale(1.05) translateX(6px); }
+    .model h3 { font-size: 1.5rem; font-weight: 700; }
+    .model p { color: var(--muted); font-size: .92rem; margin: 6px 0 20px; }
+    .model-stats { display: flex; gap: 22px; padding-top: 18px; border-top: 1px solid var(--line); margin-bottom: 22px; }
+    .model-stats strong { display: block; font-size: 1.05rem; }
+    .model-stats span { color: var(--muted); font-size: .75rem; }
+    .model-link { color: #7fb0ff; font-weight: 600; font-size: .9rem; display: inline-flex; gap: 8px; align-items: center; }
+    .model-link:hover { gap: 14px; }
+    .model-link { transition: gap .2s; }
+
+    /* ---------- Feature split ---------- */
+    .split { background: var(--ink-2); border-block: 1px solid var(--line); }
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+    .split-visual {
+      position: relative; aspect-ratio: 1 / 1; border-radius: 24px; overflow: hidden;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(28,105,212,.55), transparent 55%),
+        radial-gradient(circle at 75% 75%, rgba(127,176,255,.25), transparent 50%),
+        #0d1117;
+      border: 1px solid var(--line); display: grid; place-items: center;
+    }
+    .ring {
+      position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.12);
+      animation: spin 30s linear infinite;
+    }
+    .ring:nth-child(1) { width: 85%; height: 85%; border-style: dashed; }
+    .ring:nth-child(2) { width: 62%; height: 62%; animation-direction: reverse; animation-duration: 20s; border-color: rgba(28,105,212,.5); }
+    .ring:nth-child(3) { width: 40%; height: 40%; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .charge { position: relative; text-align: center; }
+    .charge strong { font-size: 4.5rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .charge span { display: block; color: var(--muted); font-size: .9rem; margin-top: 8px; }
+
+    .features { display: grid; gap: 26px; margin: 36px 0 40px; }
+    .feature { display: flex; gap: 18px; }
+    .feature-icon {
+      flex: none; width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(28,105,212,.14); border: 1px solid rgba(28,105,212,.35);
+      display: grid; place-items: center; color: #7fb0ff;
+    }
+    .feature h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+    .feature p { color: var(--muted); font-size: .92rem; }
+
+    /* ---------- Stats ---------- */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .stat { background: var(--ink); padding: 44px 30px; }
+    .stat strong { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -.03em; display: block; }
+    .stat strong em { color: var(--blue); font-style: normal; }
+    .stat span { color: var(--muted); font-size: .92rem; }
+
+    /* ---------- Services ---------- */
+    .services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .service {
+      padding: 32px 26px; border-radius: var(--radius); background: var(--ink-2); border: 1px solid var(--line);
+      transition: background .3s, transform .3s;
+    }
+    .service:hover { background: var(--ink-3); transform: translateY(-4px); }
+    .service .num { color: var(--blue); font-weight: 700; font-size: .85rem; letter-spacing: .1em; }
+    .service h4 { font-size: 1.15rem; margin: 18px 0 10px; font-weight: 600; }
+    .service p { color: var(--muted); font-size: .9rem; }
+
+    /* ---------- Test drive ---------- */
+    .cta-box {
+      position: relative; border-radius: 28px; overflow: hidden; padding: 70px;
+      background: linear-gradient(120deg, #0f4fa8 0%, #1c69d4 45%, #0b0d10 100%);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
+    }
+    .cta-box::before {
+      content: ""; position: absolute; right: -120px; top: -120px; width: 420px; height: 420px; border-radius: 50%;
+      border: 60px solid rgba(255,255,255,.05);
+    }
+    .cta-box h2 { font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; }
+    .cta-box > div > p { color: rgba(255,255,255,.75); margin-top: 16px; }
+    form { position: relative; display: grid; gap: 14px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    input, select {
+      width: 100%; padding: 15px 18px; border-radius: 12px; font-family: inherit; font-size: .95rem;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); color: #fff; outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    input::placeholder { color: rgba(255,255,255,.55); }
+    input:focus, select:focus { border-color: #fff; background: rgba(255,255,255,.12); }
+    select option { color: var(--ink); }
+    form .btn-primary { background: #fff; color: var(--ink); }
+    form .btn-primary:hover { background: #e8eef6; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    .form-msg { font-size: .9rem; color: #c8ffd8; min-height: 1.4em; }
+
+    /* ---------- Footer ---------- */
+    footer { border-top: 1px solid var(--line); padding: 70px 0 34px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; }
+    .footer-grid p { color: var(--muted); font-size: .9rem; margin-top: 18px; max-width: 300px; }
+    .footer-grid h5 { font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; font-weight: 600; }
+    .footer-grid ul { list-style: none; display: grid; gap: 10px; font-size: .92rem; }
+    .footer-grid ul a { color: #d4d9de; transition: color .2s; }
+    .footer-grid ul a:hover { color: var(--blue); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+      margin-top: 60px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem;
+    }
+    .socials { display: flex; gap: 10px; }
+    .socials a {
+      width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line);
+      display: grid; place-items: center; transition: all .2s;
+    }
+    .socials a:hover { background: var(--blue); border-color: var(--blue); }
+
+    /* ---------- Reveal animation ---------- */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1000px) {
+      .hero-grid, .split-grid, .cta-box { grid-template-columns: 1fr; }
+      .hero-car { order: -1; max-width: 640px; }
+      .models { grid-template-columns: repeat(2, 1fr); }
+      .services, .stats { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .cta-box { padding: 48px 32px; }
+    }
+    @media (max-width: 760px) {
+      .nav-links, .nav-cta .btn { display: none; }
+      .menu-btn { display: block; }
+      .nav-links.open {
+        display: flex; flex-direction: column; gap: 0;
+        position: absolute; top: 76px; left: 0; right: 0;
+        background: rgba(11,13,16,.97); border-bottom: 1px solid var(--line); padding: 10px 20px 20px;
+      }
+      .nav-links.open a { display: block; padding: 14px 0; border-bottom: 1px solid var(--line); }
+      section { padding: 80px 0; }
+      .models, .services, .stats, .row, .footer-grid { grid-template-columns: 1fr; }
+      .hero-specs { gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container nav">
+      <a href="#" class="brand">
+        <span class="brand-mark">BMW</span>
+        BMW
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#models">Modellar</a></li>
+        <li><a href="#electric">Elektr</a></li>
+        <li><a href="#about">Kompaniya</a></li>
+        <li><a href="#services">Xizmatlar</a></li>
+        <li><a href="#contact">Aloqa</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#contact" class="btn btn-primary btn-sm">Test-drayv</a>
+        <button class="menu-btn" id="menuBtn" aria-label="Menyu">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="eyebrow">Yangi avlod 2026</div>
+          <h1>Haydash zavqi.<br><span>Yangicha.</span></h1>
+          <p>Nemis muhandisligi, ilg'or texnologiya va betakror dizayn. Har bir safarni unutilmas tajribaga aylantiruvchi avtomobillar bilan tanishing.</p>
+          <div class="hero-actions">
+            <a href="#models" class="btn btn-primary">
+              Modellarni ko'rish
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="#contact" class="btn btn-ghost">Test-drayvga yozilish</a>
+          </div>
+        </div>
+
+        <div class="hero-car reveal">
+          <!-- Stilizatsiyalangan avtomobil silueti -->
+          <svg viewBox="0 0 640 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#3a4250"/>
+                <stop offset=".55" stop-color="#151a21"/>
+                <stop offset="1" stop-color="#07090c"/>
+              </linearGradient>
+              <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#9cc3ff" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#0c1a33" stop-opacity=".9"/>
+              </linearGradient>
+              <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+                <stop offset=".5" stop-color="#fff" stop-opacity=".6"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+              </linearGradient>
+              <radialGradient id="rim" cx=".5" cy=".5" r=".5">
+                <stop offset="0" stop-color="#cfd6df"/>
+                <stop offset=".6" stop-color="#5b6470"/>
+                <stop offset="1" stop-color="#1b1f25"/>
+              </radialGradient>
+            </defs>
+            <path d="M40 182 C40 160 58 148 90 142 L170 128 C210 92 250 72 330 70 C400 68 450 82 500 118 L560 130 C595 138 610 152 612 176 L612 192 C612 200 606 204 598 204 L52 204 C44 204 40 198 40 190 Z" fill="url(#body)"/>
+            <path d="M196 126 C232 96 268 84 330 82 C392 80 436 92 478 122 Z" fill="url(#glass)"/>
+            <path d="M330 82 L336 124" stroke="#0b0d10" stroke-width="6"/>
+            <path d="M90 150 L590 150" stroke="url(#shine)" stroke-width="1.5"/>
+            <path d="M560 146 L604 152 L604 162 L566 160 Z" fill="#ff3b3b" opacity=".85"/>
+            <path d="M44 166 L92 158 L96 170 L46 176 Z" fill="#dbe9ff"/>
+            <path d="M44 166 L92 158" stroke="#7fb0ff" stroke-width="2"/>
+            <rect x="120" y="186" width="420" height="4" rx="2" fill="#1c69d4" opacity=".8"/>
+            <g>
+              <circle cx="150" cy="204" r="38" fill="#0b0d10"/>
+              <circle cx="150" cy="204" r="28" fill="url(#rim)"/>
+              <circle cx="150" cy="204" r="8" fill="#0b0d10"/>
+              <circle cx="490" cy="204" r="38" fill="#0b0d10"/>
+              <circle cx="490" cy="204" r="28" fill="url(#rim)"/>
+              <circle cx="490" cy="204" r="8" fill="#0b0d10"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hero-specs reveal">
+        <div><strong>3.8 s</strong><span>0–100 km/soat</span></div>
+        <div><strong>625 km</strong><span>Bir zaryadda masofa</span></div>
+        <div><strong>544 o.k.</strong><span>Umumiy quvvat</span></div>
+        <div><strong>AWD</strong><span>To'liq yuritma</span></div>
+      </div>
+    </div>
+    <a href="#models" class="scroll-hint" aria-label="Pastga"></a>
+  </section>
+
+  <!-- Models -->
+  <section id="models">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>O'zingizga mos modelni tanlang</h2>
+        <p>Sedan, krossover yoki sport avtomobili — har bir model o'z xarakteriga ega.</p>
+      </div>
+
+      <div class="tabs reveal" id="tabs">
+        <button class="tab active" data-filter="all">Barchasi</button>
+        <button class="tab" data-filter="sedan">Sedan</button>
+        <button class="tab" data-filter="suv">SAV</button>
+        <button class="tab" data-filter="electric">Elektr</button>
+        <button class="tab" data-filter="m">M Performance</button>
+      </div>
+
+      <div class="models" id="modelGrid"></div>
+    </div>
+  </section>
+
+  <!-- Electric -->
+  <section class="split" id="electric">
+    <div class="container split-grid">
+      <div class="split-visual reveal">
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="charge">
+          <strong id="chargeNum">0%</strong>
+          <span>Tezkor quvvatlash · 10–80%</span>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="eyebrow">Elektr kelajak</div>
+        <h2 style="font-size: clamp(2rem,4vw,3rem); font-weight:800; letter-spacing:-.02em; line-height:1.1;">Jim. Kuchli. Toza.</h2>
+        <div class="features">
+          <div class="feature">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg>
+            </div>
+            <div><h4>Tezkor quvvatlash</h4><p>Qisqa to'xtash vaqtida yuzlab kilometrlik masofa uchun energiya oling.</p></div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            </div>
+            <div><h4>Aqlli boshqaruv</h4><p>Masofadan konditsioner, zaryad va xavfsizlikni smartfon orqali boshqaring.</p></div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div><h4>Yuqori xavfsizlik</h4><p>Haydovchiga yordam beruvchi tizimlar har bir harakatni nazorat qiladi.</p></div>
+          </div>
+        </div>
+        <a href="#contact" class="btn btn-primary">Batafsil ma'lumot</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Stats -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Bir asrdan ortiq muhandislik tajribasi</h2>
+        <p>1916-yildan beri biz harakatlanish tushunchasini qayta kashf etib kelmoqdamiz.</p>
+      </div>
+      <div class="stats reveal">
+        <div class="stat"><strong><span class="count" data-to="110">0</span><em>+</em></strong><span>Yillik tarix</span></div>
+        <div class="stat"><strong><span class="count" data-to="140">0</span><em>+</em></strong><span>Davlatlarda faoliyat</span></div>
+        <div class="stat"><strong><span class="count" data-to="30">0</span><em>+</em></strong><span>Ishlab chiqarish zavodlari</span></div>
+        <div class="stat"><strong><span class="count" data-to="24">0</span><em>/7</em></strong><span>Yo'l yordami xizmati</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" style="padding-top:0">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>Xaridan keyin ham yoningizdamiz</h2>
+        <p>Rasmiy dilerlik markazlarida to'liq xizmat ko'rsatish.</p>
+      </div>
+      <div class="services">
+        <div class="service reveal"><div class="num">01</div><h4>Moliyalashtirish</h4><p>Lizing va kredit bo'yicha moslashuvchan dasturlar.</p></div>
+        <div class="service reveal"><div class="num">02</div><h4>Servis markazi</h4><p>Original ehtiyot qismlar va sertifikatlangan mutaxassislar.</p></div>
+        <div class="service reveal"><div class="num">03</div><h4>Kafolat</h4><p>Uzaytirilgan kafolat va texnik xizmat paketlari.</p></div>
+        <div class="service reveal"><div class="num">04</div><h4>Trade-in</h4><p>Eski avtomobilingizni yangisiga qulay almashtiring.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Test drive -->
+  <section id="contact" style="padding-top:0">
+    <div class="container">
+      <div class="cta-box reveal">
+        <div>
+          <h2>Rulga o'tiring va farqni his qiling</h2>
+          <p>Ma'lumotlaringizni qoldiring — menejerimiz siz bilan bog'lanib, qulay vaqtga test-drayv belgilaydi.</p>
+        </div>
+        <form id="driveForm">
+          <div class="row">
+            <input type="text" name="name" placeholder="Ismingiz" required>
+            <input type="tel" name="phone" placeholder="+998 __ ___ __ __" required>
+          </div>
+          <select name="model" id="modelSelect" required>
+            <option value="" disabled selected>Modelni tanlang</option>
+          </select>
+          <input type="date" name="date" required>
+          <button type="submit" class="btn btn-primary">Ariza yuborish</button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand"><span class="brand-mark">BMW</span>BMW</a>
+          <p>Premium avtomobillar, innovatsion texnologiyalar va haydash zavqi — bir joyda.</p>
+        </div>
+        <div>
+          <h5>Modellar</h5>
+          <ul>
+            <li><a href="#models">Sedanlar</a></li>
+            <li><a href="#models">SAV</a></li>
+            <li><a href="#electric">Elektr</a></li>
+            <li><a href="#models">M Performance</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Kompaniya</h5>
+          <ul>
+            <li><a href="#about">Biz haqimizda</a></li>
+            <li><a href="#services">Xizmatlar</a></li>
+            <li><a href="#contact">Dilerlar</a></li>
+            <li><a href="#contact">Karyera</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Aloqa</h5>
+          <ul>
+            <li><a href="#contact">Toshkent, O'zbekiston</a></li>
+            <li><a href="#contact">+998 71 000 00 00</a></li>
+            <li><a href="#contact">info@example.uz</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> BMW landing page — o'quv loyihasi.</span>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></a>
+          <a href="#" aria-label="Telegram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 3-20 8 7 2 2 7 4-5 5 4z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ----- Modellar ro'yxati -----
+    const models = [
+      { name: "3 Series", type: "sedan", tag: "Sedan",  desc: "Sport ruhidagi biznes-sedan.",              s: [["5.8 s","0–100"],["258","o.k."],["RWD","Yuritma"]], color: "#2b3440" },
+      { name: "5 Series", type: "sedan", tag: "Sedan",  desc: "Qulaylik va dinamikaning mukammal uyg'unligi.", s: [["6.1 s","0–100"],["299","o.k."],["xDrive","Yuritma"]], color: "#3b3f46" },
+      { name: "X5",       type: "suv",   tag: "SAV",    desc: "Har qanday yo'lga tayyor premium krossover.", s: [["5.4 s","0–100"],["381","o.k."],["xDrive","Yuritma"]], color: "#1e2a3a" },
+      { name: "X7",       type: "suv",   tag: "SAV",    desc: "Yetti o'rinli flagman hashamat.",            s: [["5.8 s","0–100"],["381","o.k."],["xDrive","Yuritma"]], color: "#2a2a2a" },
+      { name: "i4",       type: "electric", tag: "Elektr", desc: "To'liq elektr gran-kupe.",               s: [["5.7 s","0–100"],["590 km","Masofa"],["0 g","CO₂"]], color: "#16345f" },
+      { name: "iX",       type: "electric", tag: "Elektr", desc: "Kelajak texnologiyalari bilan elektr SAV.", s: [["4.6 s","0–100"],["625 km","Masofa"],["0 g","CO₂"]], color: "#20324a" },
+      { name: "M3",       type: "m",     tag: "M Performance", desc: "Trekdan yo'lga chiqqan afsona.",     s: [["3.9 s","0–100"],["510","o.k."],["M xDrive","Yuritma"]], color: "#13305a" },
+      { name: "M5",       type: "m",     tag: "M Performance", desc: "Eng kuchli biznes-sedan.",           s: [["3.5 s","0–100"],["727","o.k."],["M xDrive","Yuritma"]], color: "#3a1f2b" },
+      { name: "X5 M",     type: "m",     tag: "M Performance", desc: "Krossover shaklidagi sport avtomobili.", s: [["3.8 s","0–100"],["625","o.k."],["M xDrive","Yuritma"]], color: "#1b1b1f" },
+    ];
+
+    const carSvg = (color, tall) => `
+      <svg viewBox="0 0 320 120" fill="none">
+        <path d="M14 ${tall ? 84 : 88} C14 ${tall ? 72 : 78} 24 ${tall ? 66 : 72} 40 ${tall ? 64 : 68} L88 ${tall ? 56 : 60}
+                 C110 ${tall ? 30 : 40} 130 ${tall ? 26 : 32} 170 ${tall ? 26 : 32} C206 ${tall ? 26 : 32} 230 ${tall ? 34 : 40} 254 ${tall ? 54 : 56}
+                 L286 ${tall ? 62 : 64} C300 ${tall ? 66 : 68} 306 ${tall ? 74 : 76} 306 ${tall ? 84 : 86} L306 94 C306 98 303 100 299 100 L20 100 C16 100 14 97 14 94 Z"
+              fill="${color}" stroke="rgba(255,255,255,.15)"/>
+        <path d="M100 ${tall ? 56 : 58} C120 ${tall ? 36 : 44} 138 ${tall ? 34 : 38} 170 ${tall ? 34 : 38} C200 ${tall ? 34 : 38} 222 ${tall ? 40 : 44} 242 ${tall ? 56 : 56} Z" fill="rgba(140,185,255,.35)"/>
+        <path d="M18 80 L44 76" stroke="#cfe2ff" stroke-width="3" stroke-linecap="round"/>
+        <path d="M290 76 L304 78" stroke="#ff4d4d" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="76" cy="100" r="18" fill="#0b0d10"/><circle cx="76" cy="100" r="11" fill="#8a94a0"/>
+        <circle cx="248" cy="100" r="18" fill="#0b0d10"/><circle cx="248" cy="100" r="11" fill="#8a94a0"/>
+      </svg>`;
+
+    const grid = document.getElementById("modelGrid");
+    const select = document.getElementById("modelSelect");
+
+    models.forEach(m => {
+      const card = document.createElement("article");
+      card.className = "model reveal";
+      card.dataset.type = m.type;
+      card.innerHTML = `
+        <span class="model-tag">${m.tag}</span>
+        <div class="model-visual">${carSvg(m.color, m.type === "suv" || m.name.startsWith("X") || m.name === "iX")}</div>
+        <h3>BMW ${m.name}</h3>
+        <p>${m.desc}</p>
+        <div class="model-stats">
+          ${m.s.map(([v, l]) => `<div><strong>${v}</strong><span>${l}</span></div>`).join("")}
+        </div>
+        <a href="#contact" class="model-link" data-model="${m.name}">Test-drayvga yozilish →</a>`;
+      grid.appendChild(card);
+
+      const opt = document.createElement("option");
+      opt.value = m.name;
+      opt.textContent = "BMW " + m.name;
+      select.appendChild(opt);
+    });
+
+    // Kartadagi havola bosilsa, formada model tanlanadi
+    grid.addEventListener("click", e => {
+      const link = e.target.closest(".model-link");
+      if (link) select.value = link.dataset.model;
+    });
+
+    // ----- Filtr tablari -----
+    document.getElementById("tabs").addEventListener("click", e => {
+      const tab = e.target.closest(".tab");
+      if (!tab) return;
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const f = tab.dataset.filter;
+      grid.querySelectorAll(".model").forEach(card => {
+        card.classList.toggle("hidden", f !== "all" && card.dataset.type !== f);
+      });
+    });
+
+    // ----- Header scroll effekti -----
+    const header = document.getElementById("header");
+    const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 30);
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+
+    // ----- Mobil menyu -----
+    const navLinks = document.getElementById("navLinks");
+    document.getElementById("menuBtn").addEventListener("click", () => navLinks.classList.toggle("open"));
+    navLinks.addEventListener("click", e => { if (e.target.tagName === "A") navLinks.classList.remove("open"); });
+
+    // ----- Sonlarni sanash animatsiyasi -----
+    const animateCount = (el, to, suffix = "") => {
+      const start = performance.now();
+      const dur = 1600;
+      const step = now => {
+        const p = Math.min((now - start) / dur, 1);
+        el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    // ----- Scroll'da paydo bo'lish -----
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add("visible");
+        el.querySelectorAll(".count").forEach(c => animateCount(c, +c.dataset.to));
+        if (el.classList.contains("split-visual")) animateCount(document.getElementById("chargeNum"), 80, "%");
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    // ----- Forma -----
+    document.getElementById("driveForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      document.getElementById("formMsg").textContent =
+        `Rahmat, ${data.get("name")}! BMW ${data.get("model")} test-drayvi uchun arizangiz qabul qilindi.`;
+      e.target.reset();
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
